@@ -1,6 +1,6 @@
 // src/context/AuthContext.jsx
 import { useContext } from 'react';
-import { createContext, useState } from 'react';
+import { createContext, useState, useRef } from 'react';
 import apiClient from '../services/apiClient';
 import { notifications } from '@mantine/notifications';
 import classes from '../toast.module.css';
@@ -26,6 +26,8 @@ export const DataProvider = ({ children }) => {
   const [precios, setPrecios] = useState([]);
   const [parametricas, setParametricas] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  // Referencia para evitar duplicidad de mensajes toast
+  const lastToastRef = useRef({ title: '', message: '', type: '' });
 
   useEffect(() => {
     if(user) consumirAPI('/listarClasificador', { opcion: 'T' });
@@ -33,6 +35,16 @@ export const DataProvider = ({ children }) => {
   }, [])
   
   const toast = (title,message,type) =>{
+    // Evitar duplicidad consecutiva
+    const last = lastToastRef.current;
+    if (
+      last.title === title &&
+      last.message.slice(0,8) === message.slice(0,8) &&
+      last.type === type
+    ) {
+      return; // No mostrar si es igual al último
+    }
+    lastToastRef.current = { title, message, type };
     let color = type
     if(type == 'success') color = 'money.9';
     if(type == 'info') color = 'blue.9';

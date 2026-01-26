@@ -41,7 +41,11 @@ const Navbar = () => {
   ]
 
   return (
-    <Box>
+    <Box style={{
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+    }}>
       <Text size="lg" style={{marginBottom: '1rem'}}>Menú</Text>
       {menu.map((item, index) => (
         <Button key={index} leftSection={icons[item.nivel -1]} justify='flex-start' variant={location.pathname == item.ruta ? "filled":"light"}  fullWidth onClick={() => navigate(item.ruta)}
@@ -49,6 +53,15 @@ const Navbar = () => {
           {item.descripcion}
         </Button>
       ))}
+      <Box style={{
+        marginTop: 'auto',
+        marginBottom: '5rem',
+        fontSize: '0.9rem',
+        color: '#888',
+        textAlign: 'center'
+      }}>
+        Presta App v1.0.0
+      </Box>
     </Box>
   )
 }

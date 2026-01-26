@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('ip', resp.ip);
       console.log('el deco',deco);
       
-      if([1,5,6].includes(deco.id_rol)) navigate('/');
+      if([1,5,6].includes(deco.id_rol)) navigate('/dashboard');
       if([2].includes(deco.id_rol)) navigate('/pedido');
       if([3].includes(deco.id_rol)) navigate('/caja');
       if([4].includes(deco.id_rol)) navigate('/inventario');

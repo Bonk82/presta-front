@@ -24,6 +24,7 @@ import Inventory from './pages/Inventory';
 import Configuration from './pages/Configuration';
 import Cashier from './pages/Cashier';
 import Client from './pages/Client';
+import { Tooltip } from 'recharts';
 
 const myTheme =createTheme({
   primaryColor:'money',
