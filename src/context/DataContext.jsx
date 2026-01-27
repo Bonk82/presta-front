@@ -13,24 +13,25 @@ export const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const { user, logout} = UserAuth();
   const [loading, setLoading] = useState(false);
-  const [productos, setProductos] = useState([]);
-  const [proveedores, setProveedores] = useState([]);
+  const [configuraciones, setConfiguraciones] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [sucursales, setSucursales] = useState([]);
   const [roles, setRoles] = useState([]);
-  const [componentes, setComponentes] = useState([]);
+
   const [cajas, setCajas] = useState([]);
-  const [ingresos, setIngresos] = useState([]);
-  const [ingresoDetalles, setIngresoDetalles] = useState([]);
-  const [pedidos, setPedidos] = useState([]);
-  const [promociones, setPromociones] = useState([]);
-  const [precios, setPrecios] = useState([]);
-  const [parametricas, setParametricas] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
+  const [movimientos, setMovimientos] = useState([]);
+  const [tiposMovimiento, setTiposMovimiento] = useState([]);
+  const [clientes, setClientes] = useState([]);
+  const [cuotas, setCuotas] = useState([]);
+  const [pagos, setPagos] = useState([]);
+  const [prestamos, setPrestamos] = useState([]);
+  const [prendas, setPrendas] = useState([]);
+  const [renovaciones, setRenovaciones] = useState([]);
   // Referencia para evitar duplicidad de mensajes toast
   const lastToastRef = useRef({ title: '', message: '', type: '' });
 
   useEffect(() => {
-    if(user) consumirAPI('/listarClasificador', { opcion: 'T' });
+    if(user) consumirAPI('/listarConfiguracion', { opcion: 'T' });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
@@ -63,19 +64,19 @@ export const DataProvider = ({ children }) => {
     parametros.cache = new Date().getTime();
     try {
       const resp = await apiClient.get(ruta, { params: { ...parametros }});
-      if(ruta === '/listarProductos') setProductos(resp);
-      if(ruta === '/listarProveedores') setProveedores(resp);
+      if(ruta === '/listarConfiguracion') setConfiguraciones(resp);
+      if(ruta === '/listarUsuarios') setUsuarios(resp);
       if(ruta === '/listarSucursales') setSucursales(resp);
       if(ruta === '/listarRoles') setRoles(resp);
-      if(ruta === '/listarComponentes') setComponentes(resp);
-      if(ruta === '/listarControlCajas') setCajas(resp);
-      if(ruta === '/listarIngresos') setIngresos(resp);
-      if(ruta === '/listarIngresoDetalles') setIngresoDetalles(resp);
-      if(ruta === '/listarPedidos') setPedidos(resp);
-      if(ruta === '/listarPromociones') setPromociones(resp);
-      if(ruta === '/listarSucursalProductos') setPrecios(resp);
-      if(ruta === '/listarClasificador') setParametricas(resp);
-      if(ruta === '/listarUsuarios') setUsuarios(resp);
+      if(ruta === '/listarCajas') setCajas(resp);
+      if(ruta === '/listarMovimientos') setMovimientos(resp);
+      if(ruta === '/listarTipoMovimientos') setTiposMovimiento(resp);
+      if(ruta === '/listarClientes') setClientes(resp);
+      if(ruta === '/listarCuotas') setCuotas(resp);
+      if(ruta === '/listarPagos') setPagos(resp);
+      if(ruta === '/listarPrendas') setPrendas(resp);
+      if(ruta === '/listarRenovaciones') setRenovaciones(resp);
+      if(ruta === '/listarPrestamos') setPrestamos(resp);
       console.log('API Response:', ruta, resp);
       
       if(ruta.startsWith('/crud') && resp[0]?.message) {
@@ -140,7 +141,7 @@ export const DataProvider = ({ children }) => {
   }
 
   return (
-    <DataContext.Provider value={{ loading,productos, proveedores, sucursales, roles, componentes, cajas, ingresos, ingresoDetalles, pedidos, promociones, consumirAPI,toast,parametricas,usuarios,precios,subirArchivo,generarReporte }}>
+    <DataContext.Provider value={{ loading,clientes, cuotas, pagos, prestamos, prendas, renovaciones, sucursales, roles,cajas, consumirAPI,toast,configuraciones,usuarios,subirArchivo,generarReporte }}>
       {children}
     </DataContext.Provider>
   );

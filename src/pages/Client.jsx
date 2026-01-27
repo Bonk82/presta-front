@@ -4,7 +4,7 @@ import { UserAuth } from '../context/AuthContext';
 import { useMemo } from 'react';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import { ActionIcon, Box, Button, Group, LoadingOverlay, Modal, NumberInput, Text, TextInput, Tooltip } from '@mantine/core';
-import { IconBuilding, IconCashBanknote, IconDeviceFloppy, IconEdit, IconGps, IconPhone, IconSquarePlus, IconTrash, IconUser } from '@tabler/icons-react';
+import { IconBuilding, IconCalendar, IconDeviceFloppy, IconEdit, IconGps, IconPhone, IconSquarePlus, IconTrash, IconUser } from '@tabler/icons-react';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es/index.esm.mjs';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -13,7 +13,7 @@ import { modals } from '@mantine/modals';
 const Client = () => {
   //TODO  <h1> Client Page & appraisal</h1>
   const { user } = UserAuth();
-  const { loading,consumirAPI,clientes } = DataApp();
+  const { loading,consumirAPI,clientes,configuracion } = DataApp();
   const [opened, { open, close }] = useDisclosure(false);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Client = () => {
       telefonos: '',
       correo: '',
       fecha_nacimiento: '',
-      estado_cliente: '',
+      estado_cliente: 'ALTA',
       calificacion_riesgo: 'A',
       observaciones: '',
       usuario_registro: user?.usuario
@@ -66,16 +66,13 @@ const Client = () => {
   const columns = useMemo(
     () => [
       { accessorKey: 'codigo_cliente',header: 'Código Cliente',},
-      { accessorKey: 'tipo_documento',header: 'Tipo Documento',},
       { accessorKey: 'numero_documento',header: 'Número Documento',},
-      { accessorKey: 'nombres',header: 'Nombres',},
-      { accessorKey: 'paterno',header: 'Apellido Paterno',},
-      { accessorKey: 'materno',header: 'Apellido Materno',},
+      { accessorKey: 'nombre',header: 'Cliente',},
       { accessorKey: 'direccion',header: 'Dirección',},
       { accessorKey: 'telefonos',header: 'Teléfonos',},
       { accessorKey: 'correo',header: 'Correo',},
       { accessorKey: 'fecha_nacimiento',header: 'Fecha Nacimiento',},
-      { accessorKey: 'estado_cliente',header: 'Estado Cliente',},
+      { accessorKey: 'estado_cliente',header: 'Estado',},
       { accessorKey: 'calificacion_riesgo',header: 'Calificación Riesgo',},
       { accessorKey: 'observaciones',header: 'Observaciones',},
     ],
@@ -158,15 +155,51 @@ const Client = () => {
         />
         <Modal opened={opened} onClose={close} title={formCliente.getValues().id_cliente?'Actualizar Cliente: '+ formCliente.getValues().id_cliente:'Registrar Cliente'} size='lg' zIndex={20} overlayProps={{backgroundOpacity: 0.55,blur: 3,}} yOffset='10dvh'> 
           <form onSubmit={formCliente.onSubmit((values) => crudCliente(values))} style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+            <NativeSelect
+              label="Tipo Documento:"
+              data={[{label:'SELECCIONE...',value:null},...configuracion.filter(f=>f.grupo == 'TIPO_DOCUMENTO').map((e) => e.nombre),]}
+              required
+              leftSection={<IconBuilding size={16} />}
+              key={formCliente.key("tipo_documento")}
+              {...formCliente.getInputProps("tipo_documento")}
+            />
             <TextInput
-              label="Nombre:"
+              label="Número Documento:"
+              placeholder="Número de documento del cliente"
+              type='text'
+              maxLength={50}
+              required
+              leftSection={<IconUser size={16} />}
+              key={formCliente.key('numero_documento')}
+              {...formCliente.getInputProps('numero_documento')}
+            />
+            <TextInput
+              label="Nombres:"
               placeholder="Nombre del cliente"
               type='text'
               maxLength={100}
               required
               leftSection={<IconUser size={16} />}
-              key={formCliente.key('nombre')}
-              {...formCliente.getInputProps('nombre')}
+              key={formCliente.key('nombres')}
+              {...formCliente.getInputProps('nombres')}
+            />
+            <TextInput
+              label="Apellido Paterno:"
+              placeholder="Apellido paterno del cliente"
+              leftSection={<IconUser size={16} />}
+              type='text'
+              maxLength={100}
+              key={formCliente.key('apellido_paterno')}
+              {...formCliente.getInputProps('apellido_paterno')}
+            />
+            <TextInput
+              label="Apellido Materno:"
+              placeholder="Apellido materno del cliente"
+              leftSection={<IconUser size={16} />}
+              type='text'
+              maxLength={100}
+              key={formCliente.key('apellido_materno')}
+              {...formCliente.getInputProps('apellido_materno')}
             />
             <TextInput
               label="Dirección:"
@@ -176,15 +209,6 @@ const Client = () => {
               leftSection={<IconGps size={16} />}
               key={formCliente.key('direccion')}
               {...formCliente.getInputProps('direccion')}
-            />
-            <TextInput
-              label="Referencia:"
-              placeholder="Referencias para llegar al cliente"
-              leftSection={<IconBuilding size={16} />}
-              type='text'
-              maxLength={100}
-              key={formCliente.key('referencia')}
-              {...formCliente.getInputProps('referencia')}
             />
             <NumberInput
               label="Teléfonos:"
@@ -198,13 +222,23 @@ const Client = () => {
               {...formCliente.getInputProps('telefonos')}
             />
             <TextInput
-              label="Cuenta Bancaria:"
-              placeholder="Banco y núumero de cuenta bancaria"
-              maxLength={20}
-              minLength={8}
-              leftSection={<IconCashBanknote size={16} />}
-              key={formCliente.key('cuenta')}
-              {...formCliente.getInputProps('cuenta')}
+              label="Correo:"
+              placeholder="Correo electrónico del cliente"
+              maxLength={50}
+              minLength={5}
+              type='email'
+              leftSection={<IconMail size={16} />}
+              key={formCliente.key('correo')}
+              {...formCliente.getInputProps('correo')}
+            />
+            <TextInput
+              label="Fecha Nacimiento:"
+              type='date'
+              maxLength={10}
+              max={dayjs().format('YYYY-MM-DD')}
+              leftSection={<IconCalendar size={16} />}
+              key={formCliente.key('fecha_nacimiento')}
+              {...formCliente.getInputProps('fecha_nacimiento')}
             />
             <Group justify="flex-end" mt="md">
               <Button fullWidth leftSection={<IconDeviceFloppy/>} type='submit'>{!formCliente.getValues().id_cliente ? 'Registrar':'Actualizar'} Cliente</Button>
