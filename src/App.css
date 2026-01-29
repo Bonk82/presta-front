@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Questrial&display=swap');
 :root{
   /* --mantine-primary-color: #646cff; */
   --mantine-secondary-color: #ffdd00;
@@ -10,6 +10,8 @@
   --primary-backgrounbd-color: #10061c;
   --mantine-color-error: #ed60a6;
   /* --button-bg: #240846; */
+  font-weight: 200;
+  font-style: normal;
 }
 
 *{
@@ -81,6 +83,7 @@ body{
 }
 th{
   background-color: var(--mantine-primary-color-filled) !important;
+  font-size: 0.9rem !important;
 }
 tr{
   background-color: transparent !important;
@@ -94,7 +97,7 @@ tr{
   min-height: 2rem;
 }
 .mantine-Modal-body{
-  background: linear-gradient(0deg, #0a0213 0%, #280230 100%); 
+  background: linear-gradient(0deg, #072b11 0%, #094119 100%); 
   /* background-color: var(--primary-backgrounbd-color) */
 }
 .mantine-Input-wrapper{
@@ -122,6 +125,17 @@ tr{
 
 table tr:nth-child(even) {
   background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.mantine-Input-input, .mantine-Select-input{
+  /* background-color: #244a3d !important; */
+  background-color: #1c352c !important;
+}
+.mantine-Popover-dropdown {
+  background-color: #1c352c !important; 
+}
+.mantine-Input-wrapper{
+  background-color: #1c352c !important;
 }
 
 /* cards productos */
@@ -520,4 +534,11 @@ table tr:nth-child(even) {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.pre-avaluo-container{
+  display:grid;
+  gap:1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  text-align: left;
 }

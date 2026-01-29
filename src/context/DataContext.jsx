@@ -31,32 +31,34 @@ export const DataProvider = ({ children }) => {
   const lastToastRef = useRef({ title: '', message: '', type: '' });
 
   useEffect(() => {
-    if(user) consumirAPI('/listarConfiguracion', { opcion: 'T' });
+    if(user) consumirAPI('/listarConfiguraciones', { opcion: 'T' });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [user])
   
   const toast = (title,message,type) =>{
-    // Evitar duplicidad consecutiva
+    // Evitar duplicidad consecutiva en menos de 2 segundos
+    const now = Date.now();
     const last = lastToastRef.current;
     if (
       last.title === title &&
       last.message.slice(0,8) === message.slice(0,8) &&
-      last.type === type
+      last.type === type &&
+      last.time && (now - last.time < 2000)
     ) {
-      return; // No mostrar si es igual al último
+      return; // No mostrar si es igual al último y fue hace menos de 2 segundos
     }
-    lastToastRef.current = { title, message, type };
-    let color = type
-    if(type == 'success') color = 'money.9';
+    lastToastRef.current = { title, message, type, time: now };
+    let color = type;
+    if(type == 'success') color = 'money.8';
     if(type == 'info') color = 'blue.9';
-    if(type == 'warning') color = 'oro.9';
+    if(type == 'warning') color = 'oro.7';
     if(type == 'error') color = 'rgba(143, 0, 0, 1)';
     notifications.show({
       title,
       message,
       color,
       classNames: classes,
-    })
+    });
   }
 
   const consumirAPI = async( ruta,parametros) =>{
@@ -64,7 +66,7 @@ export const DataProvider = ({ children }) => {
     parametros.cache = new Date().getTime();
     try {
       const resp = await apiClient.get(ruta, { params: { ...parametros }});
-      if(ruta === '/listarConfiguracion') setConfiguraciones(resp);
+      if(ruta === '/listarConfiguraciones') setConfiguraciones(resp);
       if(ruta === '/listarUsuarios') setUsuarios(resp);
       if(ruta === '/listarSucursales') setSucursales(resp);
       if(ruta === '/listarRoles') setRoles(resp);
@@ -141,7 +143,7 @@ export const DataProvider = ({ children }) => {
   }
 
   return (
-    <DataContext.Provider value={{ loading,clientes, cuotas, pagos, prestamos, prendas, renovaciones, sucursales, roles,cajas, consumirAPI,toast,configuraciones,usuarios,subirArchivo,generarReporte }}>
+    <DataContext.Provider value={{ loading,clientes, cuotas, pagos, prestamos, prendas, renovaciones, sucursales, roles,cajas,movimientos,tiposMovimiento, consumirAPI,toast,configuraciones,usuarios,subirArchivo,generarReporte }}>
       {children}
     </DataContext.Provider>
   );
